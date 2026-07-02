@@ -312,7 +312,7 @@ if args.profile:
     else:
         # proton-viewer -m tflop/s,time/s ./matmul.hatchet
         proton.start("matmul", hook="triton")
-    benchmark.run(show_plots=True, print_data=True)
+    benchmark.run(show_plots=False, print_data=True)
     proton.finalize()
 else:
-    benchmark.run(show_plots=True, print_data=True)
+    benchmark.run(show_plots=False, print_data=True)

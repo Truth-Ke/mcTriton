@@ -363,32 +363,32 @@ torch.manual_seed(0)
 a = torch.rand((512, 512), device=DEVICE, dtype=torch.float16) - 0.5
 b = torch.rand((512, 512), device=DEVICE, dtype=torch.float16) - 0.5
 triton_output = matmul(a, b)
-# torch_output = torch.matmul(a, b)
-# print(f"triton_output_with_fp16_inputs={triton_output}")
-# print(f"torch_output_with_fp16_inputs={torch_output}")
+torch_output = torch.matmul(a, b)
+print(f"triton_output_with_fp16_inputs={triton_output}")
+print(f"torch_output_with_fp16_inputs={torch_output}")
 
-# if torch.allclose(triton_output, torch_output, atol=1e-2, rtol=0):
-#     print("✅ Triton and Torch match")
-# else:
-#     print("❌ Triton and Torch differ")
+if torch.allclose(triton_output, torch_output, atol=1e-2, rtol=0):
+    print("✅ Triton and Torch match")
+else:
+    print("❌ Triton and Torch differ")
 
-# TORCH_HAS_FP8 = hasattr(torch, "float8_e5m2")
-# if TORCH_HAS_FP8 and is_cuda():
-#     torch.manual_seed(0)
-#     a = torch.randn((512, 512), device=DEVICE, dtype=torch.float16)
-#     b = torch.randn((512, 512), device=DEVICE, dtype=torch.float16)
-#     a = a.to(torch.float8_e5m2)
-#     # pre-transpose b for efficiency.
-#     b = b.T
-#     b = b.to(torch.float8_e5m2)
-#     triton_output = matmul(a, b)
-#     torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
-#     print(f"triton_output_with_fp8_inputs={triton_output}")
-#     print(f"torch_output_with_fp8_inputs={torch_output}")
-#     if torch.allclose(triton_output, torch_output, atol=0.125, rtol=0):
-#         print("✅ Triton and Torch match")
-#     else:
-#         print("❌ Triton and Torch differ")
+TORCH_HAS_FP8 = hasattr(torch, "float8_e5m2")
+if TORCH_HAS_FP8 and is_cuda():
+    torch.manual_seed(0)
+    a = torch.randn((512, 512), device=DEVICE, dtype=torch.float16)
+    b = torch.randn((512, 512), device=DEVICE, dtype=torch.float16)
+    a = a.to(torch.float8_e5m2)
+    # pre-transpose b for efficiency.
+    b = b.T
+    b = b.to(torch.float8_e5m2)
+    triton_output = matmul(a, b)
+    torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
+    print(f"triton_output_with_fp8_inputs={triton_output}")
+    print(f"torch_output_with_fp8_inputs={torch_output}")
+    if torch.allclose(triton_output, torch_output, atol=0.125, rtol=0):
+        print("✅ Triton and Torch match")
+    else:
+        print("❌ Triton and Torch differ")
 
 # # %%
 # # Benchmark
@@ -438,4 +438,4 @@ triton_output = matmul(a, b)
 #     perf = lambda ms: 2 * M * N * K * 1e-12 / (ms * 1e-3)
 #     return perf(ms), perf(max_ms), perf(min_ms)
 
-# benchmark.run(show_plots=True, print_data=True)
+# benchmark.run(show_plots=False, print_data=True)

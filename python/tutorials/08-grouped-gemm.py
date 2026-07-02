@@ -561,5 +561,5 @@ def benchmark_batches(M, provider):
     return ms, max_ms, min_ms
 
 
-benchmark_square_matrices.run(show_plots=True, print_data=True)
-benchmark_batches.run(show_plots=True, print_data=True)
+benchmark_square_matrices.run(show_plots=False, print_data=True)
+benchmark_batches.run(show_plots=False, print_data=True)

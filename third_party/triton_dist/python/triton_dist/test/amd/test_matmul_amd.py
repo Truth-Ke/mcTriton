@@ -808,7 +808,7 @@ def benchmark(M, N, K, provider, fp8_inputs):
 
 
 print("GEMM")
-benchmark.run(show_plots=True, print_data=True)
+benchmark.run(show_plots=False, print_data=True)
 
 
 @triton.testing.perf_report(configs)
@@ -845,7 +845,7 @@ def benchmark_streamk(M, N, K, provider, fp8_inputs):
 
 
 print("StreamK GEMM")
-benchmark_streamk.run(show_plots=True, print_data=True)
+benchmark_streamk.run(show_plots=False, print_data=True)
 
 
 @triton.testing.perf_report(configs)
@@ -869,4 +869,4 @@ def benchmark_persistent(M, N, K, provider, fp8_inputs):
 
 
 print("Persistent GEMM")
-benchmark_persistent.run(show_plots=True, print_data=True)
+benchmark_persistent.run(show_plots=False, print_data=True)
