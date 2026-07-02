@@ -85,6 +85,24 @@ enum class Layout : uint8_t {
   NN,
 };
 
+inline int getMACAMmaVersionMajor(int computeCapability) {
+  if (computeCapability < 70)
+    return 0;
+  if (computeCapability < 80)
+    return 1;
+  if (computeCapability < 90)
+    return 2;
+  if (computeCapability < 100)
+    return 3;
+  return 4;
+}
+
+inline int getMACAMmaVersionMinor(int computeCapability) {
+  return computeCapability % 10;
+}
+
+inline unsigned getDefaultMACAMmaColMajor() { return 0; }
+
 // lds(shared->dotoperand op)'s size
 // {m, n, k, numWarps} -> {elemsM, elemsN, elemsK}, {warpM, warpN}
 using TileTable =

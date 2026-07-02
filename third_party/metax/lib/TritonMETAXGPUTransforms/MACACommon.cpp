@@ -310,7 +310,7 @@ SmallVector<unsigned, 2> getOrder(triton::gpu::ConvertLayoutOp &op) {
 
 SmallVector<unsigned, 2> getOrder(Value &src) {
   Operation *trans = src.getDefiningOp();
-  auto transOp = dyn_cast<triton::TransOp>(trans);
+  auto transOp = dyn_cast_or_null<triton::TransOp>(trans);
   if (transOp) {
     Value transSrc = transOp.getSrc();
     if (auto transSrcTy = dyn_cast<RankedTensorType>(transSrc.getType())) {
@@ -434,7 +434,7 @@ SmallVector<unsigned, 2> getOrder(Value &src) {
 
 SmallVector<int64_t, 2> getShape(Value &src) {
   Operation *trans = src.getDefiningOp();
-  auto transOp = dyn_cast<triton::TransOp>(trans);
+  auto transOp = dyn_cast_or_null<triton::TransOp>(trans);
   if (transOp) {
     Value transSrc = transOp.getSrc();
     if (auto transSrcTy = dyn_cast<RankedTensorType>(transSrc.getType())) {

@@ -314,10 +314,29 @@ class MACABackend(BaseBackend):
         pm.enable_debug()
 
         passes.gluon.add_inliner(pm)
-        passes.gluon.add_resolve_auto_encodings(pm)
+        scenarios = parse_option(options.scenario)
+        skip_gluon_layout_passes = (
+            "manualGluonLayouts" in scenarios
+            or os.getenv("TRITON_METAX_GLUON_MANUAL_LAYOUTS")
+            or src.get_int_attr("ttg.gluon.manual-layouts")
+        )
+        if not skip_gluon_layout_passes:
+            store_coalesce = "storeCoalesce" in scenarios or getattr(options, "store_coalesce", False)
+            metax.passes.ttgpuir.add_tritonmetaxgpu_gluon_insert_require_layout(
+                pm, capability, store_coalesce
+            )
+            metax.passes.ttgpuir.add_tritonmetaxgpu_gluon_propagate_layout(pm)
         passes.common.add_sccp(pm)
         passes.ttir.add_loop_aware_cse(pm)
         passes.gluon.add_canonicalizer(pm)
+        passes.ttgpuir.add_optimize_dot_operands(pm, capability >= 80)
+        passes.ttgpuir.add_remove_layout_conversions(pm)
+        metax.passes.ttgpuir.add_tritonmetaxgpu_optimize_smem_usage(pm, False)
+        passes.ttgpuir.add_reduce_data_duplication(pm)
+        passes.ttgpuir.add_reorder_instructions(pm)
+        passes.common.add_cse(pm)
+        passes.common.add_symbol_dce(pm)
+        passes.common.add_canonicalizer(pm)
         passes.ttgpuir.add_combine_tensor_select_and_if(pm)
 
         pm.run(mod, 'gluon_to_ttgir')

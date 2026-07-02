@@ -2,8 +2,12 @@
 #define TRITON_DIALECT_TRITONMETAXGPU_TRANSFORMS_PASSES_H_
 
 #include "mlir/Pass/Pass.h"
+#include "triton/Dialect/TritonGPU/IR/Dialect.h"
 
 namespace mlir {
+
+#define GEN_PASS_DECL
+#include "TritonMETAXGPUTransforms/Passes.h.inc"
 
 std::unique_ptr<Pass> createTritonMETAXGPUAccelerateMatmulPass(
     int numStages = 2, bool disablePrefetch = false, bool storeCoalesce = false,
